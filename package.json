@@ -7,7 +7,9 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "check": "npm run build"
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "check": "npm run build && npm run test:visual"
   },
   "dependencies": {
     "@liqui/liquid-app-shell": "file:../liquid-app-shell",
@@ -15,6 +17,7 @@
     "vue": "2.7.16"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "vite": "^7.1.3"
   }
 }

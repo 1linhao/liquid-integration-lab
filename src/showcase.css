@@ -19,6 +19,12 @@ button { white-space: nowrap; }
 .lab-card .liquid-glass__content { min-height: 190px; padding: 26px; }
 .lab-card h2 { margin: 12px 0 8px; font-size: 1.6rem; }
 .lab-card p:last-child { color: var(--liquid-ink-muted); line-height: 1.55; }
+.lab-controls .liquid-glass__content { display: grid; gap: 20px; padding: 26px; }
+.lab-controls__header { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.lab-controls__header h2 { margin: 8px 0 0; font-size: 1.6rem; }
+.lab-controls__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.lab-field { display: grid; gap: 7px; color: var(--liquid-ink-muted); font-size: .82rem; font-weight: 700; }
+.lab-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .lab-notice { position: fixed; left: 50%; bottom: 90px; z-index: 1100; transform: translateX(-50%); margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--liquid-ink); color: Canvas; box-shadow: var(--liquid-shadow); }
 .lab-nav-glyph { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: color-mix(in srgb, var(--liquid-accent) 22%, transparent); color: var(--liquid-accent); font-size: .7rem; font-weight: 800; }
 
@@ -26,4 +32,7 @@ button { white-space: nowrap; }
   .lab-toolbar .liquid-button:first-child { display: none; }
   .lab-grid { grid-template-columns: minmax(0, 1fr); }
   .lab-card .liquid-glass__content { min-height: 150px; padding: 20px; }
+  .lab-controls .liquid-glass__content { padding: 20px; }
+  .lab-controls__header { align-items: flex-start; flex-direction: column; }
+  .lab-controls__grid { grid-template-columns: minmax(0, 1fr); }
 }

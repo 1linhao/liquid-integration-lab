@@ -1,11 +1,29 @@
 import Vue from 'vue'
-import { createLiquidUI, LiquidButton, LiquidGlassSurface } from '@liqui/liquid-ui'
+import {
+  createLiquidUI,
+  LiquidButton,
+  LiquidGlassSurface,
+  LiquidInput,
+  LiquidNumberInput,
+  LiquidSwitch,
+  LiquidTag
+} from '@liqui/liquid-ui'
 import { createLiquidAppShell, LiquidAppShell } from '@liqui/liquid-app-shell'
 import '@liqui/liquid-ui/styles.css'
 import '@liqui/liquid-app-shell/styles.css'
 import './showcase.css'
 
-const liquidUI = createLiquidUI({ paletteStorage: window.localStorage, initialMode: 'system' })
+const parameters = new URLSearchParams(window.location.search)
+const requestedMode = parameters.get('mode')
+const requestedPalette = parameters.get('palette')
+if (['blue', 'violet', 'emerald', 'amber'].includes(requestedPalette)) {
+  window.localStorage.setItem('liquid-ui.palette', requestedPalette)
+}
+const liquidUI = createLiquidUI({
+  paletteStorage: window.localStorage,
+  initialMode: ['light', 'dark', 'system'].includes(requestedMode) ? requestedMode : 'system',
+  initialPalette: ['blue', 'violet', 'emerald', 'amber'].includes(requestedPalette) ? requestedPalette : 'blue'
+})
 Vue.use(liquidUI)
 Vue.use(createLiquidAppShell())
 
@@ -26,7 +44,11 @@ new Vue({
     resolvedMode: liquidUI.theme.getState().resolvedMode,
     palette: liquidUI.theme.getState().palette,
     quality: liquidUI.material.getQuality(),
-    notice: ''
+    notice: '',
+    displayName: 'Ada Lovelace',
+    seatCount: 3,
+    alertsEnabled: true,
+    tags: ['stable', 'vue2', 'accessible']
   }),
   computed: {
     shellModel() {
@@ -56,6 +78,10 @@ new Vue({
     setQuality(quality) {
       this.quality = liquidUI.material.setQuality(quality)
       this.notice = `Material quality set to ${quality}.`
+    },
+    removeTag(tag) {
+      this.tags = this.tags.filter((candidate) => candidate !== tag)
+      this.notice = `Removed ${tag}.`
     }
   },
   render(h) {
@@ -98,6 +124,40 @@ new Vue({
           card('overlay', 'Overlay', 'Raised surfaces increase frost and specular separation.'),
           card('control', 'Control', 'Compact controls use a narrower refracting bezel.'),
           card('navigation', 'Navigation', 'Sidebar and mobile navigation share this material intent.')
+        ]),
+        h(LiquidGlassSurface, { class: 'lab-controls', props: { surface: 'panel' } }, [
+          h('div', { class: 'lab-controls__header' }, [
+            h('div', [h('p', { class: 'lab-eyebrow' }, 'PRIMITIVES'), h('h2', 'Controlled component contracts')]),
+            h(LiquidSwitch, {
+              props: { value: this.alertsEnabled, label: 'Enable alerts' },
+              on: { input: (value) => { this.alertsEnabled = value } }
+            }, 'Alerts')
+          ]),
+          h('div', { class: 'lab-controls__grid' }, [
+            h('div', { class: 'lab-field' }, [
+              h('span', 'Display name'),
+              h(LiquidInput, {
+                props: { value: this.displayName, clearable: true },
+                attrs: { placeholder: 'Your name', 'aria-label': 'Display name' },
+                on: { input: (value) => { this.displayName = value } }
+              })
+            ]),
+            h('div', { class: 'lab-field' }, [
+              h('span', 'Seats'),
+              h(LiquidNumberInput, {
+                props: { value: this.seatCount, min: 1, max: 12, step: 1 },
+                attrs: { 'aria-label': 'Seats' },
+                on: { input: (value) => { this.seatCount = value } }
+              })
+            ])
+          ]),
+          h('div', { class: 'lab-tags', attrs: { 'aria-label': 'Tags' } }, this.tags.map((tag, index) =>
+            h(LiquidTag, {
+              key: tag,
+              props: { tone: ['success', 'info', 'accent'][index % 3], closable: true },
+              on: { close: () => this.removeTag(tag) }
+            }, tag)
+          ))
         ]),
         this.notice ? h('p', { class: 'lab-notice', attrs: { role: 'status' } }, this.notice) : null
       ])
