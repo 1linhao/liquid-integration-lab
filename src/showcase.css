@@ -1,0 +1,29 @@
+:root {
+  background: #dceaff;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(40, 124, 255, .48), transparent 34%),
+    radial-gradient(circle at 88% 15%, rgba(135, 83, 235, .38), transparent 32%),
+    radial-gradient(circle at 60% 86%, rgba(17, 163, 126, .34), transparent 38%);
+  background-attachment: fixed;
+}
+[data-liquid-mode="dark"] { background-color: #081328; }
+body { margin: 0; min-width: 320px; min-height: 100dvh; overflow: hidden; }
+button { white-space: nowrap; }
+.lab-page { display: grid; gap: 18px; padding: 2px 4px 24px; }
+.lab-intro { max-width: 780px; padding: clamp(18px, 4vw, 44px) 6px 10px; }
+.lab-intro h2 { max-width: 680px; margin: 8px 0 14px; font-size: clamp(2rem, 6vw, 4.8rem); line-height: .98; letter-spacing: -.055em; }
+.lab-intro p { max-width: 650px; color: var(--liquid-ink-muted); font-size: 1.05rem; line-height: 1.6; }
+.lab-eyebrow { margin: 0; color: var(--liquid-accent); font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.lab-toolbar, .lab-palettes { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.lab-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.lab-card .liquid-glass__content { min-height: 190px; padding: 26px; }
+.lab-card h2 { margin: 12px 0 8px; font-size: 1.6rem; }
+.lab-card p:last-child { color: var(--liquid-ink-muted); line-height: 1.55; }
+.lab-notice { position: fixed; left: 50%; bottom: 90px; z-index: 1100; transform: translateX(-50%); margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--liquid-ink); color: Canvas; box-shadow: var(--liquid-shadow); }
+.lab-nav-glyph { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: color-mix(in srgb, var(--liquid-accent) 22%, transparent); color: var(--liquid-accent); font-size: .7rem; font-weight: 800; }
+
+@media (max-width: 760px) {
+  .lab-toolbar .liquid-button:first-child { display: none; }
+  .lab-grid { grid-template-columns: minmax(0, 1fr); }
+  .lab-card .liquid-glass__content { min-height: 150px; padding: 20px; }
+}
