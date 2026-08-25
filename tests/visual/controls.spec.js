@@ -17,6 +17,14 @@ test('controlled primitives expose their keyboard and event contracts', async ({
   await alerts.press('Space')
   await expect(alerts).toHaveAttribute('aria-checked', 'false')
 
+  const region = page.getByRole('combobox', { name: 'Region' })
+  await region.press('ArrowDown')
+  await expect(region).toHaveAttribute('aria-expanded', 'true')
+  await page.getByLabel('Search options').fill('Asia')
+  await page.getByLabel('Search options').press('Enter')
+  await expect(region).toHaveText(/Asia Pacific/)
+  await expect(region).toHaveAttribute('aria-expanded', 'false')
+
   await expect(page.getByText('stable', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Remove tag' }).first().click()
   await expect(page.getByText('stable', { exact: true })).toHaveCount(0)

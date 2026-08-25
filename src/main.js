@@ -5,6 +5,7 @@ import {
   LiquidGlassSurface,
   LiquidInput,
   LiquidNumberInput,
+  LiquidSelect,
   LiquidSwitch,
   LiquidTag
 } from '@liqui/liquid-ui/vue2'
@@ -47,6 +48,7 @@ new Vue({
     notice: '',
     displayName: 'Ada Lovelace',
     seatCount: 3,
+    region: 'eu-west',
     alertsEnabled: true,
     tags: ['stable', 'vue2', 'accessible']
   }),
@@ -148,6 +150,24 @@ new Vue({
                 props: { value: this.seatCount, min: 1, max: 12, step: 1 },
                 attrs: { 'aria-label': 'Seats' },
                 on: { input: (value) => { this.seatCount = value } }
+              })
+            ]),
+            h('div', { class: 'lab-field' }, [
+              h('span', 'Region'),
+              h(LiquidSelect, {
+                props: {
+                  value: this.region,
+                  filterable: true,
+                  clearable: true,
+                  options: [
+                    { value: 'us-east', label: 'US East' },
+                    { value: 'eu-west', label: 'Europe West' },
+                    { value: 'ap-south', label: 'Asia Pacific' },
+                    { value: 'legacy', label: 'Legacy region', disabled: true }
+                  ]
+                },
+                attrs: { 'aria-label': 'Region' },
+                on: { input: (value) => { this.region = value } }
               })
             ])
           ]),
