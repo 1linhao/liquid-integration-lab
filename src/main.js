@@ -7,7 +7,7 @@ import {
   LiquidNumberInput,
   LiquidSwitch,
   LiquidTag
-} from '@liqui/liquid-ui'
+} from '@liqui/liquid-ui/vue2'
 import { createLiquidAppShell, LiquidAppShell } from '@liqui/liquid-app-shell'
 import '@liqui/liquid-ui/styles.css'
 import '@liqui/liquid-app-shell/styles.css'
