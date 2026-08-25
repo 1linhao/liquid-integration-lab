@@ -2,6 +2,8 @@ import Vue from 'vue'
 import {
   createLiquidUI,
   LiquidButton,
+  LiquidForm,
+  LiquidFormItem,
   LiquidGlassSurface,
   LiquidInput,
   LiquidNumberInput,
@@ -37,6 +39,12 @@ const NAVIGATION = [
   { key: 'about', label: 'About', mobileLabel: 'About', icon: 'about' }
 ]
 
+const FORM_RULES = Object.freeze({
+  displayName: Object.freeze([{ required: true, message: 'Display name is required' }, { min: 3, message: 'Use at least 3 characters' }]),
+  seatCount: Object.freeze({ min: 1, max: 12 }),
+  region: Object.freeze({ required: true, message: 'Choose a region' })
+})
+
 new Vue({
   el: '#lab',
   data: () => ({
@@ -53,6 +61,9 @@ new Vue({
     tags: ['stable', 'vue2', 'accessible']
   }),
   computed: {
+    editorModel() {
+      return { displayName: this.displayName, seatCount: this.seatCount, region: this.region }
+    },
     shellModel() {
       const active = NAVIGATION.find((item) => item.key === this.activeKey)
       return {
@@ -135,25 +146,32 @@ new Vue({
               on: { input: (value) => { this.alertsEnabled = value } }
             }, 'Alerts')
           ]),
-          h('div', { class: 'lab-controls__grid' }, [
-            h('div', { class: 'lab-field' }, [
-              h('span', 'Display name'),
+          h(LiquidForm, {
+            ref: 'editorForm',
+            props: {
+              model: this.editorModel,
+              rules: FORM_RULES
+            },
+            on: {
+              submit: () => { this.notice = 'Reusable form validation passed.' },
+              invalid: ({ errors }) => { this.notice = `Form needs attention: ${Object.keys(errors).filter((key) => errors[key].length).join(', ')}` }
+            }
+          }, [h('div', { class: 'lab-controls__grid' }, [
+            h(LiquidFormItem, { props: { field: 'displayName', label: 'Display name', required: true } }, [
               h(LiquidInput, {
                 props: { value: this.displayName, clearable: true },
                 attrs: { placeholder: 'Your name', 'aria-label': 'Display name' },
                 on: { input: (value) => { this.displayName = value } }
               })
             ]),
-            h('div', { class: 'lab-field' }, [
-              h('span', 'Seats'),
+            h(LiquidFormItem, { props: { field: 'seatCount', label: 'Seats' } }, [
               h(LiquidNumberInput, {
                 props: { value: this.seatCount, min: 1, max: 12, step: 1 },
                 attrs: { 'aria-label': 'Seats' },
                 on: { input: (value) => { this.seatCount = value } }
               })
             ]),
-            h('div', { class: 'lab-field' }, [
-              h('span', 'Region'),
+            h(LiquidFormItem, { props: { field: 'region', label: 'Region', required: true } }, [
               h(LiquidSelect, {
                 props: {
                   value: this.region,
@@ -169,8 +187,9 @@ new Vue({
                 attrs: { 'aria-label': 'Region' },
                 on: { input: (value) => { this.region = value } }
               })
-            ])
-          ]),
+            ]),
+            h('div', { class: 'lab-form-actions' }, [h(LiquidButton, { attrs: { type: 'submit' }, props: { tone: 'accent', size: 'small' } }, 'Validate form')])
+          ])]),
           h('div', { class: 'lab-tags', attrs: { 'aria-label': 'Tags' } }, this.tags.map((tag, index) =>
             h(LiquidTag, {
               key: tag,

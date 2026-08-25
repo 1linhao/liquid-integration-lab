@@ -25,6 +25,13 @@ test('controlled primitives expose their keyboard and event contracts', async ({
   await expect(region).toHaveText(/Asia Pacific/)
   await expect(region).toHaveAttribute('aria-expanded', 'false')
 
+  await name.fill('')
+  await page.getByRole('button', { name: 'Validate form' }).click()
+  await expect(page.getByRole('alert')).toHaveText('Display name is required')
+  await name.fill('Grace Hopper')
+  await page.getByRole('button', { name: 'Validate form' }).click()
+  await expect(page.getByRole('status')).toHaveText('Reusable form validation passed.')
+
   await expect(page.getByText('stable', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Remove tag' }).first().click()
   await expect(page.getByText('stable', { exact: true })).toHaveCount(0)
