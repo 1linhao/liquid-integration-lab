@@ -2,6 +2,7 @@ import Vue from 'vue'
 import {
   createLiquidUI,
   LiquidButton,
+  LiquidDatePicker,
   LiquidForm,
   LiquidFormItem,
   LiquidGlassSurface,
@@ -42,7 +43,8 @@ const NAVIGATION = [
 const FORM_RULES = Object.freeze({
   displayName: Object.freeze([{ required: true, message: 'Display name is required' }, { min: 3, message: 'Use at least 3 characters' }]),
   seatCount: Object.freeze({ min: 1, max: 12 }),
-  region: Object.freeze({ required: true, message: 'Choose a region' })
+  region: Object.freeze({ required: true, message: 'Choose a region' }),
+  startDate: Object.freeze({ required: true, message: 'Choose a start date' })
 })
 
 new Vue({
@@ -57,12 +59,13 @@ new Vue({
     displayName: 'Ada Lovelace',
     seatCount: 3,
     region: 'eu-west',
+    startDate: '2028-02-14',
     alertsEnabled: true,
     tags: ['stable', 'vue2', 'accessible']
   }),
   computed: {
     editorModel() {
-      return { displayName: this.displayName, seatCount: this.seatCount, region: this.region }
+      return { displayName: this.displayName, seatCount: this.seatCount, region: this.region, startDate: this.startDate }
     },
     shellModel() {
       const active = NAVIGATION.find((item) => item.key === this.activeKey)
@@ -186,6 +189,13 @@ new Vue({
                 },
                 attrs: { 'aria-label': 'Region' },
                 on: { input: (value) => { this.region = value } }
+              })
+            ]),
+            h(LiquidFormItem, { props: { field: 'startDate', label: 'Start date', required: true } }, [
+              h(LiquidDatePicker, {
+                props: { value: this.startDate, min: '2028-02-01', max: '2028-03-31' },
+                attrs: { 'aria-label': 'Start date' },
+                on: { input: (value) => { this.startDate = value } }
               })
             ]),
             h('div', { class: 'lab-form-actions' }, [h(LiquidButton, { attrs: { type: 'submit' }, props: { tone: 'accent', size: 'small' } }, 'Validate form')])

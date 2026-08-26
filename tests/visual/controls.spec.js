@@ -25,6 +25,23 @@ test('controlled primitives expose their keyboard and event contracts', async ({
   await expect(region).toHaveText(/Asia Pacific/)
   await expect(region).toHaveAttribute('aria-expanded', 'false')
 
+  const startDate = page.getByRole('button', { name: 'Start date' })
+  await startDate.press('ArrowDown')
+  const dateDialog = page.getByRole('dialog', { name: 'Date picker' })
+  await expect(dateDialog).toBeVisible()
+  const selectedDay = page.getByRole('gridcell', { name: /February 14, 2028/ })
+  await selectedDay.press('ArrowRight')
+  await page.keyboard.press('Enter')
+  await expect(startDate).toHaveText(/February 15, 2028/)
+  await expect(dateDialog).toBeHidden()
+
+  await startDate.press('ArrowDown')
+  await page.getByLabel('Date input').fill('2028-02-30')
+  await page.getByLabel('Date input').press('Enter')
+  await expect(dateDialog.getByRole('alert')).toContainText('valid available date')
+  await page.keyboard.press('Escape')
+  await expect(startDate).toBeFocused()
+
   await name.fill('')
   await page.getByRole('button', { name: 'Validate form' }).click()
   await expect(page.getByRole('alert')).toHaveText('Display name is required')
