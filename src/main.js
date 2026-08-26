@@ -5,6 +5,7 @@ import {
   LiquidDatePicker,
   LiquidDialog,
   LiquidDropdown,
+  LiquidFeedbackHost,
   LiquidForm,
   LiquidFormItem,
   LiquidGlassSurface,
@@ -238,6 +239,12 @@ new Vue({
             }),
             h(LiquidTooltip, { props: { label: 'Material help', content: 'Overlay material follows the same quality budget.', delay: 0 } }, 'Material help')
           ]),
+          h('div', { class: 'lab-feedback-actions', attrs: { 'aria-label': 'Feedback examples' } }, [
+            h(LiquidButton, { props: { size: 'small' }, on: { click: () => liquidUI.feedback.message({ type: 'success', message: 'Settings saved.' }) } }, 'Show message'),
+            h(LiquidButton, { props: { size: 'small' }, on: { click: () => liquidUI.feedback.notification({ title: 'Deployment ready', message: 'The reusable host rendered this notification.', duration: 0 }) } }, 'Show notification'),
+            h(LiquidButton, { props: { size: 'small' }, on: { click: async () => { this.notice = await liquidUI.feedback.confirm({ title: 'Publish library?', message: 'This request is queued by the framework-neutral controller.' }) ? 'Publishing confirmed.' : 'Publishing cancelled.' } } }, 'Ask confirm'),
+            h(LiquidButton, { props: { size: 'small' }, on: { click: async () => { const name = await liquidUI.feedback.prompt({ title: 'Name the release', message: 'Enter a reusable release label.', defaultValue: 'Aurora' }); this.notice = name ? `Release named ${name}.` : 'Release naming cancelled.' } } }, 'Ask name')
+          ]),
           h('div', { class: 'lab-tags', attrs: { 'aria-label': 'Tags' } }, this.tags.map((tag, index) =>
             h(LiquidTag, {
               key: tag,
@@ -264,7 +271,8 @@ new Vue({
             h(LiquidButton, { props: { size: 'small', tone: 'neutral' }, on: { click: () => { this.dialogOpen = false } } }, 'Cancel'),
             h(LiquidButton, { props: { size: 'small', tone: 'accent' }, on: { click: () => { this.dialogOpen = false; this.notice = 'Dialog action confirmed.' } } }, 'Confirm')
           ])
-        ])
+        ]),
+        h(LiquidFeedbackHost)
       ])
     ])
   }
