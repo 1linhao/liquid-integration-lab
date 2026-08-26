@@ -4,14 +4,17 @@ import {
   LiquidButton,
   LiquidDatePicker,
   LiquidDialog,
+  LiquidDropdown,
   LiquidForm,
   LiquidFormItem,
   LiquidGlassSurface,
   LiquidInput,
   LiquidNumberInput,
+  LiquidPopover,
   LiquidSelect,
   LiquidSwitch,
-  LiquidTag
+  LiquidTag,
+  LiquidTooltip
 } from '@liqui/liquid-ui/vue2'
 import { createLiquidAppShell, LiquidAppShell } from '@liqui/liquid-app-shell'
 import '@liqui/liquid-ui/styles.css'
@@ -62,6 +65,7 @@ new Vue({
     region: 'eu-west',
     startDate: '2028-02-14',
     dialogOpen: false,
+    popoverOpen: false,
     alertsEnabled: true,
     tags: ['stable', 'vue2', 'accessible']
   }),
@@ -205,6 +209,14 @@ new Vue({
               h(LiquidButton, { props: { tone: 'neutral', size: 'small' }, on: { click: () => { this.dialogOpen = true } } }, 'Open dialog')
             ])
           ])]),
+          h('div', { class: 'lab-overlay-actions' }, [
+            h(LiquidPopover, { props: { value: this.popoverOpen, label: 'Component notes', panelLabel: 'Component notes' }, on: { input: (value) => { this.popoverOpen = value } } }, [h('strong', 'Shared overlay'), h('p', 'Positioning and dismissal stay inside the resource library.')]),
+            h(LiquidDropdown, {
+              props: { label: 'More actions', items: [{ key: 'duplicate', label: 'Duplicate' }, { key: 'archive', label: 'Archive' }, { key: 'remove', label: 'Remove', tone: 'danger' }] },
+              on: { select: (key) => { this.notice = `Dropdown selected ${key}.` } }
+            }),
+            h(LiquidTooltip, { props: { label: 'Material help', content: 'Overlay material follows the same quality budget.', delay: 0 } }, 'Material help')
+          ]),
           h('div', { class: 'lab-tags', attrs: { 'aria-label': 'Tags' } }, this.tags.map((tag, index) =>
             h(LiquidTag, {
               key: tag,
