@@ -3,6 +3,7 @@ import {
   createLiquidUI,
   LiquidButton,
   LiquidDatePicker,
+  LiquidDialog,
   LiquidForm,
   LiquidFormItem,
   LiquidGlassSurface,
@@ -60,6 +61,7 @@ new Vue({
     seatCount: 3,
     region: 'eu-west',
     startDate: '2028-02-14',
+    dialogOpen: false,
     alertsEnabled: true,
     tags: ['stable', 'vue2', 'accessible']
   }),
@@ -198,7 +200,10 @@ new Vue({
                 on: { input: (value) => { this.startDate = value } }
               })
             ]),
-            h('div', { class: 'lab-form-actions' }, [h(LiquidButton, { attrs: { type: 'submit' }, props: { tone: 'accent', size: 'small' } }, 'Validate form')])
+            h('div', { class: 'lab-form-actions' }, [
+              h(LiquidButton, { attrs: { type: 'submit' }, props: { tone: 'accent', size: 'small' } }, 'Validate form'),
+              h(LiquidButton, { props: { tone: 'neutral', size: 'small' }, on: { click: () => { this.dialogOpen = true } } }, 'Open dialog')
+            ])
           ])]),
           h('div', { class: 'lab-tags', attrs: { 'aria-label': 'Tags' } }, this.tags.map((tag, index) =>
             h(LiquidTag, {
@@ -208,7 +213,18 @@ new Vue({
             }, tag)
           ))
         ]),
-        this.notice ? h('p', { class: 'lab-notice', attrs: { role: 'status' } }, this.notice) : null
+        this.notice ? h('p', { class: 'lab-notice', attrs: { role: 'status' } }, this.notice) : null,
+        h(LiquidDialog, {
+          props: { value: this.dialogOpen, title: 'Reusable dialog' },
+          on: { input: (value) => { this.dialogOpen = value }, close: (reason) => { this.notice = `Dialog closed by ${reason}.` } }
+        }, [
+          h('p', 'The modal owns focus, Escape, backdrop dismissal, scroll locking, and restoration.'),
+          h(LiquidInput, { props: { value: this.displayName }, attrs: { autofocus: true, 'aria-label': 'Dialog name' }, on: { input: (value) => { this.displayName = value } } }),
+          h('div', { slot: 'footer' }, [
+            h(LiquidButton, { props: { size: 'small', tone: 'neutral' }, on: { click: () => { this.dialogOpen = false } } }, 'Cancel'),
+            h(LiquidButton, { props: { size: 'small', tone: 'accent' }, on: { click: () => { this.dialogOpen = false; this.notice = 'Dialog action confirmed.' } } }, 'Confirm')
+          ])
+        ])
       ])
     ])
   }
