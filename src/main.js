@@ -1,21 +1,39 @@
 import Vue from 'vue'
 import {
   createLiquidUI,
+  LiquidBadge,
+  LiquidBreadcrumb,
   LiquidButton,
+  LiquidCard,
+  LiquidCol,
   LiquidDatePicker,
   LiquidDialog,
+  LiquidDrawer,
   LiquidDropdown,
   LiquidFeedbackHost,
   LiquidForm,
   LiquidFormItem,
   LiquidGlassSurface,
   LiquidInput,
+  LiquidIconButton,
+  LiquidLoading,
+  LiquidMenu,
+  LiquidMeter,
+  LiquidNavIcon,
   LiquidNumberInput,
   LiquidPopover,
+  LiquidProgress,
+  LiquidRow,
+  LiquidScrollArea,
+  LiquidSegmented,
   LiquidSelect,
   LiquidSwitch,
   LiquidTable,
+  LiquidTableColumn,
   LiquidTag,
+  LiquidTextarea,
+  LiquidThemeToggle,
+  LiquidPalettePicker,
   LiquidTooltip
 } from '@liqui/liquid-ui/vue2'
 import { createLiquidAppShell, LiquidAppShell } from '@liqui/liquid-app-shell'
@@ -53,12 +71,6 @@ const FORM_RULES = Object.freeze({
   startDate: Object.freeze({ required: true, message: 'Choose a start date' })
 })
 
-const TABLE_COLUMNS = Object.freeze([
-  Object.freeze({ key: 'name', label: 'Node', minWidth: 180, sortable: true }),
-  Object.freeze({ key: 'region', label: 'Region', minWidth: 150, sortable: true }),
-  Object.freeze({ key: 'status', label: 'Status', minWidth: 120 }),
-  Object.freeze({ key: 'latency', label: 'Latency', minWidth: 120, align: 'right', sortable: true, format: (value) => `${value} ms` })
-])
 const TABLE_ROWS = Object.freeze([
   { id: 1, name: 'Frankfurt Edge', region: 'Europe', status: 'Healthy', latency: 72 },
   { id: 2, name: 'Tokyo Core', region: 'Asia Pacific', status: 'Healthy', latency: 38 },
@@ -86,7 +98,11 @@ new Vue({
     region: 'eu-west',
     startDate: '2028-02-14',
     dialogOpen: false,
+    drawerOpen: false,
+    loading: false,
     popoverOpen: false,
+    catalogView: 'summary',
+    notes: 'Shared primitives keep application state controlled by the host.',
     tableSort: { key: '', direction: 'none' },
     alertsEnabled: true,
     tags: ['stable', 'vue2', 'accessible']
@@ -256,9 +272,38 @@ new Vue({
         h(LiquidGlassSurface, { class: 'lab-data-table', props: { surface: 'panel' } }, [
           h('div', [h('p', { class: 'lab-eyebrow' }, 'DATA DISPLAY'), h('h2', 'One scroll container keeps columns aligned')]),
           h(LiquidTable, {
-            props: { columns: TABLE_COLUMNS, rows: TABLE_ROWS, sort: this.tableSort, maxHeight: 260, caption: 'Reusable node inventory' },
+            props: { rows: TABLE_ROWS, sort: this.tableSort, maxHeight: 260, caption: 'Reusable node inventory' },
             on: { 'update:sort': (sort) => { this.tableSort = sort }, 'row-click': (row) => { this.notice = `Selected ${row.name}.` } }
-          })
+          }, [
+            h(LiquidTableColumn, { props: { field: 'name', label: 'Node', minWidth: 180, sortable: true } }),
+            h(LiquidTableColumn, { props: { field: 'region', label: 'Region', minWidth: 150, sortable: true } }),
+            h(LiquidTableColumn, { props: { field: 'status', label: 'Status', minWidth: 120 } }),
+            h(LiquidTableColumn, { props: { field: 'latency', label: 'Latency', minWidth: 120, align: 'right', sortable: true } })
+          ])
+        ]),
+        h(LiquidCard, { class: 'lab-catalog', props: { title: 'Reusable component catalog', elevated: true } }, [
+          h(LiquidBreadcrumb, { props: { items: [{ key: 'home', label: 'Library' }, { key: 'catalog', label: 'Catalog' }] }, on: { navigate: (key) => { this.notice = `Breadcrumb selected ${key}.` } } }),
+          h(LiquidRow, { props: { gap: 16 } }, [
+            h(LiquidCol, { props: { span: 7, minWidth: 260 } }, [
+              h(LiquidSegmented, { props: { value: this.catalogView, label: 'Catalog view', options: [{ value: 'summary', label: 'Summary' }, { value: 'details', label: 'Details' }, { value: 'disabled', label: 'Locked', disabled: true }] }, on: { input: (value) => { this.catalogView = value } } }),
+              h(LiquidTextarea, { props: { value: this.notes, rows: 3 }, attrs: { 'aria-label': 'Catalog notes' }, on: { input: (value) => { this.notes = value } } }),
+              h(LiquidProgress, { props: { value: 72, label: 'Migration coverage', showValue: true } }),
+              h(LiquidMeter, { props: { value: 84, label: 'API stability', tone: 'success' } })
+            ]),
+            h(LiquidCol, { props: { span: 5, minWidth: 220 } }, [
+              h('div', { class: 'lab-catalog__tools' }, [
+                h(LiquidBadge, { props: { value: 4, tone: 'accent' } }, [h(LiquidIconButton, { props: { label: 'Catalog notifications', size: 'small' } }, [h(LiquidNavIcon, { props: { name: 'info', size: 16 } })])]),
+                h(LiquidThemeToggle, { on: { change: (mode) => { this.mode = mode; this.resolvedMode = mode } } }),
+                h(LiquidPalettePicker, { props: { value: this.palette }, on: { input: (palette) => { this.palette = palette } } })
+              ]),
+              h(LiquidMenu, { props: { activeKey: this.catalogView, label: 'Catalog sections', items: [{ key: 'summary', label: 'Summary' }, { key: 'details', label: 'Details' }, { key: 'admin', label: 'Host-only action', disabled: true }] }, on: { 'update:activeKey': (key) => { this.catalogView = key } } }),
+              h(LiquidScrollArea, { class: 'lab-catalog__scroll', props: { maxHeight: 74 }, attrs: { 'aria-label': 'Catalog capabilities' } }, [h('p', 'Controlled state'), h('p', 'Semantic tokens'), h('p', 'Keyboard contracts'), h('p', 'Framework-neutral services')])
+            ])
+          ]),
+          h('div', { slot: 'footer', class: 'lab-catalog__actions' }, [
+            h(LiquidButton, { props: { size: 'small' }, on: { click: () => { this.drawerOpen = true } } }, 'Open drawer'),
+            h(LiquidButton, { props: { size: 'small' }, on: { click: () => { this.loading = true; window.setTimeout(() => { this.loading = false }, 900) } } }, 'Show loading')
+          ])
         ]),
         this.notice ? h('p', { class: 'lab-notice', attrs: { role: 'status' } }, this.notice) : null,
         h(LiquidDialog, {
@@ -272,6 +317,8 @@ new Vue({
             h(LiquidButton, { props: { size: 'small', tone: 'accent' }, on: { click: () => { this.dialogOpen = false; this.notice = 'Dialog action confirmed.' } } }, 'Confirm')
           ])
         ]),
+        h(LiquidDrawer, { props: { value: this.drawerOpen, title: 'Reusable drawer' }, on: { input: (value) => { this.drawerOpen = value } } }, [h('p', 'The drawer shares focus trapping, Escape dismissal, scroll locking, and material intent with dialogs.'), h(LiquidButton, { attrs: { autofocus: true }, props: { size: 'small' }, on: { click: () => { this.drawerOpen = false } } }, 'Finish')]),
+        h(LiquidLoading, { props: { value: this.loading, label: 'Preparing reusable assets' } }),
         h(LiquidFeedbackHost)
       ])
     ])
