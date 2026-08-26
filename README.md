@@ -1,29 +1,26 @@
-# Liquid integration lab
+# Liquid 集成验证应用
 
-This is the required second consumer for LiquidUI and LiquidAppShell. It is
-deliberately unrelated to Trojan Panel: if it needs a change inside either
-package to render a generic application model, the public seam is incomplete.
+这是 LiquidUI 与 LiquidAppShell 的第二个完整消费者，与 Trojan Panel 业务无关。它证明两个资源库可以直接安装到普通应用，而不需要修改模块 Implementation。
+
+## 运行
 
 ```sh
 pnpm --dir ../liquid-ui build
 pnpm --dir ../liquid-app-shell build
 pnpm install
-pnpm build
 pnpm dev
 ```
 
-The two package builds come first because local `file:` dependencies consume
-the same installable `dist/` layout that published packages will expose.
+本地依赖按照未来 npm 包相同的 `dist/` 结构消费，因此必须先构建两个资源库。
 
-Manual acceptance matrix:
+## 验证
 
-- modes: light and dark;
-- palettes: blue, violet, emerald, amber;
-- viewports: 1440x900, 768x1024, 390x844;
-- material qualities: auto and reduced;
-- keyboard: tab through header actions, desktop navigation, mobile navigation;
-- responsive: desktop sidebar and mobile segmented bottom navigation share the
-  same model and active key.
+```sh
+pnpm build
+pnpm test:visual
+pnpm check
+```
 
-The source-of-truth functional inventory is in
-[`docs/trojan-panel-functional-baseline.md`](docs/trojan-panel-functional-baseline.md).
+自动矩阵覆盖亮暗模式、四色主题、桌面/平板/手机视口、Surface、表单控件、Select/DatePicker 展开态，以及 Tab、方向键、Enter、Space、Escape 和焦点恢复。
+
+Trojan Panel 功能盘点见 [docs/trojan-panel-functional-baseline.md](docs/trojan-panel-functional-baseline.md)，仅作为业务结构基线。该仓库是发布门槛的一部分，不作为 npm 包发布。
