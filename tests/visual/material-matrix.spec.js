@@ -9,7 +9,7 @@ for (const mode of modes) {
       await page.goto(`/?mode=${mode}&palette=${palette}`)
       await expect(page.locator('.lab-card')).toHaveCount(4)
       await page.waitForFunction(() =>
-        document.querySelectorAll('.liquid-glass__refract--fade, .liquid-glass__specular--fade').length === 0
+        document.querySelectorAll('.liqui-glass__refract--fade, .liqui-glass__specular--fade').length === 0
       )
       await expect(page).toHaveScreenshot(`${mode}-${palette}.png`)
       await expect(page.locator('.lab-controls')).toHaveScreenshot(`${mode}-${palette}-controls.png`)
