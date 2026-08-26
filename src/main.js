@@ -13,6 +13,7 @@ import {
   LiquidPopover,
   LiquidSelect,
   LiquidSwitch,
+  LiquidTable,
   LiquidTag,
   LiquidTooltip
 } from '@liqui/liquid-ui/vue2'
@@ -51,6 +52,25 @@ const FORM_RULES = Object.freeze({
   startDate: Object.freeze({ required: true, message: 'Choose a start date' })
 })
 
+const TABLE_COLUMNS = Object.freeze([
+  Object.freeze({ key: 'name', label: 'Node', minWidth: 180, sortable: true }),
+  Object.freeze({ key: 'region', label: 'Region', minWidth: 150, sortable: true }),
+  Object.freeze({ key: 'status', label: 'Status', minWidth: 120 }),
+  Object.freeze({ key: 'latency', label: 'Latency', minWidth: 120, align: 'right', sortable: true, format: (value) => `${value} ms` })
+])
+const TABLE_ROWS = Object.freeze([
+  { id: 1, name: 'Frankfurt Edge', region: 'Europe', status: 'Healthy', latency: 72 },
+  { id: 2, name: 'Tokyo Core', region: 'Asia Pacific', status: 'Healthy', latency: 38 },
+  { id: 3, name: 'Virginia Relay', region: 'US East', status: 'Degraded', latency: 118 },
+  { id: 4, name: 'Singapore Edge', region: 'Asia Pacific', status: 'Healthy', latency: 46 },
+  { id: 5, name: 'Oregon Core', region: 'US West', status: 'Healthy', latency: 64 },
+  { id: 6, name: 'London Relay', region: 'Europe', status: 'Healthy', latency: 81 },
+  { id: 7, name: 'Sydney Edge', region: 'Oceania', status: 'Degraded', latency: 132 },
+  { id: 8, name: 'Mumbai Core', region: 'Asia Pacific', status: 'Healthy', latency: 57 },
+  { id: 9, name: 'São Paulo Relay', region: 'South America', status: 'Healthy', latency: 96 },
+  { id: 10, name: 'Toronto Edge', region: 'Canada', status: 'Healthy', latency: 69 }
+])
+
 new Vue({
   el: '#lab',
   data: () => ({
@@ -66,6 +86,7 @@ new Vue({
     startDate: '2028-02-14',
     dialogOpen: false,
     popoverOpen: false,
+    tableSort: { key: '', direction: 'none' },
     alertsEnabled: true,
     tags: ['stable', 'vue2', 'accessible']
   }),
@@ -224,6 +245,13 @@ new Vue({
               on: { close: () => this.removeTag(tag) }
             }, tag)
           ))
+        ]),
+        h(LiquidGlassSurface, { class: 'lab-data-table', props: { surface: 'panel' } }, [
+          h('div', [h('p', { class: 'lab-eyebrow' }, 'DATA DISPLAY'), h('h2', 'One scroll container keeps columns aligned')]),
+          h(LiquidTable, {
+            props: { columns: TABLE_COLUMNS, rows: TABLE_ROWS, sort: this.tableSort, maxHeight: 260, caption: 'Reusable node inventory' },
+            on: { 'update:sort': (sort) => { this.tableSort = sort }, 'row-click': (row) => { this.notice = `Selected ${row.name}.` } }
+          })
         ]),
         this.notice ? h('p', { class: 'lab-notice', attrs: { role: 'status' } }, this.notice) : null,
         h(LiquidDialog, {

@@ -27,6 +27,8 @@ button { white-space: nowrap; }
 .lab-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .lab-form-actions, .lab-overlay-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .lab-overlay-actions p { margin: 8px 0 0; color: var(--liquid-ink-muted); line-height: 1.45; }
+.lab-data-table > .liquid-glass__content { display: grid; gap: 16px; padding: 24px; }
+.lab-data-table h2 { margin: 7px 0 0; font-size: 1.45rem; }
 .lab-notice { position: fixed; left: 50%; bottom: 90px; z-index: 1100; transform: translateX(-50%); margin: 0; padding: 10px 16px; border-radius: 999px; background: var(--liquid-ink); color: Canvas; box-shadow: var(--liquid-shadow); }
 .lab-nav-glyph { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: color-mix(in srgb, var(--liquid-accent) 22%, transparent); color: var(--liquid-accent); font-size: .7rem; font-weight: 800; }
 
