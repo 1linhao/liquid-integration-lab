@@ -11,6 +11,8 @@ permissions:
 jobs:
   visual:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,8 +36,6 @@ jobs:
       - run: pnpm install --frozen-lockfile && pnpm build
         working-directory: liquid-app-shell
       - run: pnpm install --frozen-lockfile
-        working-directory: liquid-integration-lab
-      - run: pnpm exec playwright install --with-deps chromium
         working-directory: liquid-integration-lab
       - run: pnpm check
         working-directory: liquid-integration-lab
