@@ -1,0 +1,41 @@
+name: 集成验收
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 1linhao/liquid-ui
+          path: liquid-ui
+      - uses: actions/checkout@v4
+        with:
+          repository: 1linhao/liquid-app-shell
+          path: liquid-app-shell
+      - uses: actions/checkout@v4
+        with:
+          path: liquid-integration-lab
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - run: npm ci && npm run build
+        working-directory: liquid-ui
+      - run: pnpm install --frozen-lockfile && pnpm build
+        working-directory: liquid-app-shell
+      - run: pnpm install --frozen-lockfile
+        working-directory: liquid-integration-lab
+      - run: pnpm exec playwright install --with-deps chromium
+        working-directory: liquid-integration-lab
+      - run: pnpm check
+        working-directory: liquid-integration-lab
