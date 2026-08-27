@@ -179,13 +179,13 @@ new Vue({
             ['blue', 'violet', 'emerald', 'amber'].map((palette) => button(palette, this.palette === palette, () => this.setPalette(palette)))
           )
         ]),
-        h('section', { class: 'lab-grid' }, [
+        h('section', { class: 'lab-grid', attrs: { id: 'materials' } }, [
           card('panel', 'Panel', 'Large, calm surfaces use a conservative optical budget.'),
           card('overlay', 'Overlay', 'Raised surfaces increase frost and specular separation.'),
           card('control', 'Control', 'Compact controls use a narrower refracting bezel.'),
           card('navigation', 'Navigation', 'Sidebar and mobile navigation share this material intent.')
         ]),
-        h(LiquidGlassSurface, { class: 'lab-controls', props: { surface: 'panel' } }, [
+        h(LiquidGlassSurface, { class: 'lab-controls', attrs: { id: 'components' }, props: { surface: 'panel' } }, [
           h('div', { class: 'lab-controls__header' }, [
             h('div', [h('p', { class: 'lab-eyebrow' }, 'PRIMITIVES'), h('h2', 'Controlled component contracts')]),
             h(LiquidSwitch, {

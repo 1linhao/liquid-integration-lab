@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "LiquidUI 与 LiquidAppShell 的跨主题、跨视口独立消费端和视觉发布门槛。",
   "repository": { "type": "git", "url": "git+https://github.com/1linhao/liquid-integration-lab.git" },
-  "homepage": "https://github.com/1linhao/liquid-integration-lab#readme",
+  "homepage": "https://1linhao.github.io/liquid-integration-lab/",
   "type": "module",
   "scripts": {
     "dev": "vite --force --host 127.0.0.1",
